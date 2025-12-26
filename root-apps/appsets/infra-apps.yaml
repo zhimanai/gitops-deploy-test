@@ -14,7 +14,7 @@ spec:
     path: root-apps/appsets/infra/
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: argocd-test
   syncPolicy:
     syncOptions:
       - ApplyOutOfSyncOnly=true

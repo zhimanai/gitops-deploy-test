@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
   name: infra-project
-  namespace: argocd
+  namespace: argocd-test
   labels:
     team: infra
     project-type: infrastructure
@@ -10,7 +10,7 @@ spec:
   description: "Infrastructure applications with cluster-wide permissions"
   
   sourceRepos:
-    - git@github.com:zhimanai/gitops-deploy.git
+    - git@github.com:zhimanai/gitops-deploy-test.git
     - https://github.com/zhimanai/*
     - '*'
   

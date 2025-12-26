@@ -21,7 +21,7 @@ spec:
                 syncWave: "10"
                 path: clusters/{{name}}/infra/rnacos/
           - git:
-              repoURL: git@github.com:zhimanai/gitops-deploy.git
+              repoURL: git@github.com:zhimanai/gitops-deploy-test.git
               revision: HEAD
               directories:
                 - path: clusters/*/infra/rnacos/
@@ -39,12 +39,12 @@ spec:
     spec:
       project: infra-project
       sources:
-        - repoURL: git@github.com:zhimanai/gitops-deploy.git
+        - repoURL: git@github.com:zhimanai/gitops-deploy-test.git
           targetRevision: HEAD
           path: clusters/{{name}}/infra/rnacos/
       destination:
         server: https://kubernetes.default.svc
-        namespace: argocd
+        namespace: argocd-test
       syncPolicy:
         syncOptions:
           - ApplyOutOfSyncOnly=true
