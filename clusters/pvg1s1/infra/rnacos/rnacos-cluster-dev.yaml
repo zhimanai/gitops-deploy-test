@@ -14,7 +14,7 @@ spec:
             region: pvg1
             stack: s1
         values:
-          autoSync: "true"
+          autoSync: "false"
           syncWave: "1"
   template:
     metadata:
@@ -48,8 +48,8 @@ spec:
         namespace: rnacos-dev
       syncPolicy:
         automated:
-          prune: true
-          selfHeal: true
+          prune: false
+          selfHeal: false
         syncOptions:
           - ApplyOutOfSyncOnly=true
           - ServerSideApply=true
