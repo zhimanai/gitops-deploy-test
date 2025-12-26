@@ -9,23 +9,23 @@ metadata:
 spec:
   generators:
     - merge:
-      mergeKeys:
-        - path
-      generators:  
-        - clusters:
-            selector:
-              matchLabels:
-                region: pvg1
-                stack: s1
-            values:
-              autoSync: 'true'
-              syncWave: "1"
-              path: clusters/{{name}}/infra/rnacos/
-        - git:
-            repoURL: git@github.com:zhimanai/gitops-deploy-test.git
-            revision: HEAD
-            directories:
-              - path: clusters/*/base
+        mergeKeys:
+          - path
+        generators:  
+          - clusters:
+              selector:
+                matchLabels:
+                  region: pvg1
+                  stack: s1
+              values:
+                autoSync: 'true'
+                syncWave: "1"
+                path: clusters/{{name}}/infra/rnacos/
+          - git:
+              repoURL: git@github.com:zhimanai/gitops-deploy-test.git
+              revision: HEAD
+              directories:
+                - path: clusters/*/base
   template:
     metadata:
       name: 'cluster-base-{{name}}'
