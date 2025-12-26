@@ -8,27 +8,22 @@ metadata:
     managed-by: root-applications
 spec:
   generators:
-    - merge:
-        mergeKeys:
-          - values.selector
-        generators:
-          generators:
-          - clusters:
-              selector:
-                matchLabels:
-                  region: pvg1
-                  stack: s1
-              values:
-                autoSync: 'true'
-                syncWave: "1"
-                selector: "clusters/{{name}}/base"
-          - git:
-              repoURL: git@github.com:zhimanai/gitops-deploy-test.git
-              revision: HEAD
-              directories:
-                - path: clusters/*/base
-              values:
-                selector: "{{path}}"
+    - clusters:
+        selector:
+          matchLabels:
+            region: pvg1
+            stack: s1
+        values:
+          autoSync: 'true'
+          syncWave: "1"
+          selector: "clusters/{{name}}/base"
+    - git:
+        repoURL: git@github.com:zhimanai/gitops-deploy-test.git
+        revision: HEAD
+        directories:
+          - path: clusters/*/base
+        values:
+          selector: "{{path}}"
   template:
     metadata:
       name: 'cluster-base-{{name}}'
