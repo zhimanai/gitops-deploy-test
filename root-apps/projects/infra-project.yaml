@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infra-project
+  namespace: argocd
+  labels:
+    team: infra
+    project-type: infrastructure
+spec:
+  description: "Infrastructure applications with cluster-wide permissions"
+  
+  sourceRepos:
+    - git@github.com:zhimanai/gitops-deploy.git
+    - https://github.com/zhimanai/*
+    - '*'
+  
+  destinations:
+    - namespace: '*'
+      server: '*'  # 允许部署到所有集群
+  
+  # 基础设施需要集群级别权限
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  
+  # 允许所有命名空间资源
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  
+  # ApplicationSet 权限
+  roles:
+    - name: infra-admin
+      description: Full access to infrastructure applications
+      policies:
+        - p, proj:infra-project:infra-admin, applications, *, infra-project/*, allow
+        - p, proj:infra-project:infra-admin, applicationsets, *, infra-project/*, allow
+        - p, proj:infra-project:infra-admin, clusters, get, *, allow

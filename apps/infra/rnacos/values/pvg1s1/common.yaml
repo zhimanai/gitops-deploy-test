@@ -1,0 +1,8 @@
+image:
+  repository: harbor.pvg2.zhiman.tech/docker/qingpan/rnacos
+  pullPolicy: IfNotPresent # IfNotPresent #
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: v0.7.5
+
+imagePullSecrets:
+  - name: harbor-pvg2s1

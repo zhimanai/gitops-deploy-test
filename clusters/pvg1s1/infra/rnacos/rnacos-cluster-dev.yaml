@@ -1,0 +1,68 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: rnacos-cluster-dev-appset
+  namespace: argocd
+  labels:
+    app-group: infrastructure
+    managed-by: tools-appset
+spec:
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            auto-sync: 'true'
+            region: pvg1
+            stack: s1
+        values:
+          autoSync: "true"
+          syncWave: "1"
+  template:
+    metadata:
+      name: rnacos-cluster-dev-{{name}}
+      labels:
+        cluster: "{{name}}"
+        region: "{{metadata.labels.region}}"
+        stack: "{{metadata.labels.stack}}"
+        app-group: infrastructure
+        infra-group: tools
+        managed-by: tools-appset
+        notify.failed: "true"
+      annotations:
+        argocd.argoproj.io/sync-wave: "{{values.syncWave}}"
+        notifications.argoproj.io/disable.on-sync-succeeded-webhook: "true"
+    spec:
+      project: infra-project
+      sources:
+        - repoURL: git@github.com:zhimanai/gitops-deploy.git
+          targetRevision: HEAD
+          path: apps/infra/rnacos/rnacos
+          helm:
+            releaseName: rnacos-cluster-dev
+            valueFiles:
+              - ../values/common.yaml
+              - ../values/{{name}}/common.yaml
+              - ../values/{{name}}/dev.yaml
+          ref: values
+      destination:
+        name: "{{name}}"
+        namespace: rnacos-dev
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+          - ServerSideApply=true
+        retry:
+          limit: 3
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
+      ignoreDifferences:
+        - group: apps
+          kind: StatefulSet
+          jqPathExpressions:
+            - '.spec.volumeClaimTemplates[].apiVersion'
+            - '.spec.volumeClaimTemplates[].kind'            

@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: rnacos-appset
+  namespace: argocd
+  labels:
+    app-group: infrastructure
+    managed-by: infra-apps
+spec:
+  generators:
+    - merge:
+        mergeKeys:
+          - path
+        generators:
+          - clusters:
+              selector:
+                matchLabels:
+                  auto-sync: 'true'
+              values:
+                autoSync: "true"
+                syncWave: "10"
+                path: clusters/{{name}}/infra/rnacos/
+          - git:
+              repoURL: git@github.com:zhimanai/gitops-deploy.git
+              revision: HEAD
+              directories:
+                - path: clusters/*/infra/rnacos/
+  template:
+    metadata:
+      name: infra-rnacos-{{name}}
+      labels:
+        cluster: "{{name}}"
+        region: "{{metadata.labels.region}}"
+        stack: "{{metadata.labels.stack}}"
+        app-group: infrastructure
+        managed-by: infra-apps
+      annotations:
+        argocd.argoproj.io/sync-wave: "{{values.syncWave}}"
+    spec:
+      project: infra-project
+      sources:
+        - repoURL: git@github.com:zhimanai/gitops-deploy.git
+          targetRevision: HEAD
+          path: clusters/{{name}}/infra/rnacos/
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+      syncPolicy:
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+          - ServerSideApply=true
+        retry:
+          limit: 3
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
