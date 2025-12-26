@@ -9,7 +9,7 @@ extraEnvVars: []
 
 persistence:
   size: 20Gi
-  storageClass: ceph-block
+  storageClass: ceph-rbd-hot
   accessModes: ["ReadWriteOnce"]
 serviceAccount:
   # Specifies whether a service account should be created
