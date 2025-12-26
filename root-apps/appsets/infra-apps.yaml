@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-apps
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: gitops-root
+    managed-by: root-applications
+spec:
+  project: infra-project
+  source:
+    repoURL: git@github.com:zhimanai/gitops-deploy-test.git
+    targetRevision: HEAD
+    path: root-apps/appsets/infra/
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
