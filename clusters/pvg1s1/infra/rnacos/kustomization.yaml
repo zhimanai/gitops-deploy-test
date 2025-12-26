@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - rnacos-cluster-dev.yaml
-  - rnacos-cluster-prod.yaml
 
 labels:
   - pairs:
