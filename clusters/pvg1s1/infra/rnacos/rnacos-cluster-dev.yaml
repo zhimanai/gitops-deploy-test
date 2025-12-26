@@ -33,7 +33,7 @@ spec:
     spec:
       project: infra-project
       sources:
-        - repoURL: git@github.com:zhimanai/gitops-deploy.git
+        - repoURL: git@github.com:zhimanai/gitops-deploy-test.git
           targetRevision: HEAD
           path: apps/infra/rnacos/rnacos
           helm:
