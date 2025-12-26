@@ -15,7 +15,8 @@ spec:
           - clusters:
               selector:
                 matchLabels:
-                  auto-sync: 'true'
+                  region: pvg1
+                  stack: s1
               values:
                 autoSync: "true"
                 syncWave: "10"
