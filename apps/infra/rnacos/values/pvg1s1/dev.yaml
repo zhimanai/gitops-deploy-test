@@ -45,7 +45,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod-issuer
   hosts:
-    - host: rnacos-dev.pvg2.internal.zhiman.tech
+    - host: rnacos-dev.pvg1s1.internal.zhiman.tech
       paths:
         - path: /
           pathType: Prefix
