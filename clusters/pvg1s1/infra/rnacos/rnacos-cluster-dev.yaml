@@ -2,10 +2,10 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: rnacos-cluster-dev-appset
-  namespace: argocd
+  namespace: argocd-test
   labels:
     app-group: infrastructure
-    managed-by: tools-appset
+    managed-by: rnacos-appset
 spec:
   generators:
     - clusters:

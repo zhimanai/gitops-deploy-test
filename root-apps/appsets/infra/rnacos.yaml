@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: rnacos-appset
-  namespace: argocd
+  namespace: argocd-test
   labels:
     app-group: infrastructure
     managed-by: infra-apps
