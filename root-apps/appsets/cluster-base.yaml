@@ -1,0 +1,64 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-base
+  namespace: argocd-test
+  labels:
+    app-group: cluster-base
+    managed-by: root-applications
+spec:
+  generators:
+    - merge:
+        mergeKeys:
+          - values.selector
+        generators:
+          generators:
+          - clusters:
+              selector:
+                matchLabels:
+                  region: pvg1
+                  stack: s1
+              values:
+                autoSync: 'true'
+                syncWave: "1"
+                selector: "clusters/{{name}}/base"
+          - git:
+              repoURL: git@github.com:zhimanai/gitops-deploy-test.git
+              revision: HEAD
+              directories:
+                - path: clusters/*/base
+              values:
+                selector: "{{path}}"
+  template:
+    metadata:
+      name: 'cluster-base-{{name}}'
+      labels:
+        cluster: '{{name}}'
+        region: "{{metadata.labels.region}}"
+        stack: "{{metadata.labels.stack}}"
+        app-group: cluster-base
+        managed-by: root-applications
+      annotations:
+        argocd.argoproj.io/sync-wave: "{{values.syncWave}}"
+    spec:
+      project: infra-project
+      sources:
+        - repoURL: git@github.com:zhimanai/gitops-deploy-test.git
+          targetRevision: HEAD
+          path: 'clusters/{{name}}/base'
+      destination:
+        name: '{{name}}'
+        namespace: argocd-test
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+          - ServerSideApply=true
+        retry:
+          limit: 3
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
