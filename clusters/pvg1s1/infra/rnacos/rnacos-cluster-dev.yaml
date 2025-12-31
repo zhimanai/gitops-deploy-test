@@ -1,66 +1,50 @@
 apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+kind: Application
 metadata:
-  name: rnacos-cluster-dev-appset
+  name: rnacos-cluster-dev-pvg1s1
   namespace: argocd-test
   labels:
+    cluster: pvg1s1
+    region: pvg1
+    stack: s1
     app-group: infrastructure
-    managed-by: rnacos-appset
+    infra-group: tools
+    managed-by: tools-appset
+    notify.failed: "true"
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    notifications.argoproj.io/disable.on-sync-succeeded-webhook: "true"
 spec:
-  generators:
-    - clusters:
-        selector:
-          matchLabels:
-            region: pvg1
-            stack: s1
-        values:
-          autoSync: "false"
-          syncWave: "1"
-  template:
-    metadata:
-      name: rnacos-cluster-dev-{{name}}
-      labels:
-        cluster: "{{name}}"
-        region: "{{metadata.labels.region}}"
-        stack: "{{metadata.labels.stack}}"
-        app-group: infrastructure
-        infra-group: tools
-        managed-by: tools-appset
-        notify.failed: "true"
-      annotations:
-        argocd.argoproj.io/sync-wave: "{{values.syncWave}}"
-        notifications.argoproj.io/disable.on-sync-succeeded-webhook: "true"
-    spec:
-      project: infra-project
-      sources:
-        - repoURL: git@github.com:zhimanai/gitops-deploy-test.git
-          targetRevision: HEAD
-          path: apps/infra/rnacos/rnacos
-          helm:
-            releaseName: rnacos-cluster-dev
-            valueFiles:
-              - ../values/common.yaml
-              - ../values/{{name}}/common.yaml
-              - ../values/{{name}}/dev.yaml
-          ref: values
-      destination:
-        name: "{{name}}"
-        namespace: rnacos-dev
-      syncPolicy:
-        syncOptions:
-          - Prune=false
-          - Replace=false
-          - ApplyOutOfSyncOnly=true
-          - ServerSideApply=true
-        retry:
-          limit: 3
-          backoff:
-            duration: 5s
-            factor: 2
-            maxDuration: 3m
-      ignoreDifferences:
-        - group: apps
-          kind: StatefulSet
-          jqPathExpressions:
-            - '.spec.volumeClaimTemplates[].apiVersion'
-            - '.spec.volumeClaimTemplates[].kind'            
+  project: infra-project
+  sources:
+    - repoURL: git@github.com:zhimanai/gitops-deploy-test.git
+      targetRevision: HEAD
+      path: apps/infra/rnacos/rnacos
+      helm:
+        releaseName: rnacos-cluster-dev
+        valueFiles:
+          - ../values/common.yaml
+          - ../values/pvg1s1/common.yaml
+          - ../values/pvg1s1/dev.yaml
+      ref: values
+  destination:
+    name: "pvg1s1"
+    namespace: rnacos-dev
+  syncPolicy:
+    syncOptions:
+      - Prune=false
+      - Replace=false
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jqPathExpressions:
+        - '.spec.volumeClaimTemplates[].apiVersion'
+        - '.spec.volumeClaimTemplates[].kind'
