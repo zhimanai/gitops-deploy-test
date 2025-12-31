@@ -7,6 +7,6 @@ resources:
 labels:
   - pairs:
       managed-by: tools-appset
-      region: pvg1
+      region: pvg2
       stack: s1
-      cluster: pvg1s1
+      cluster: pvg2s1
