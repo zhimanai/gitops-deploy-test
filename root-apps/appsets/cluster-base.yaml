@@ -47,10 +47,9 @@ spec:
         name: '{{name}}'
         namespace: argocd-test
       syncPolicy:
-        automated:
-          prune: false
-          selfHeal: true
         syncOptions:
+          - Prune=false
+          - Replace=false
           - ApplyOutOfSyncOnly=true
           - ServerSideApply=true
         retry:

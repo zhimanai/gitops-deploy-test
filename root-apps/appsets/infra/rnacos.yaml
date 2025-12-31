@@ -48,6 +48,8 @@ spec:
         namespace: argocd-test
       syncPolicy:
         syncOptions:
+          - Prune=false
+          - Replace=false
           - ApplyOutOfSyncOnly=true
           - ServerSideApply=true
         retry:

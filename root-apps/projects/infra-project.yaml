@@ -36,3 +36,5 @@ spec:
         - p, proj:infra-project:infra-admin, applications, *, infra-project/*, allow
         - p, proj:infra-project:infra-admin, applicationsets, *, infra-project/*, allow
         - p, proj:infra-project:infra-admin, clusters, get, *, allow
+  
+  # 如需限制同步窗口，可在此定义 syncWindows

@@ -47,10 +47,9 @@ spec:
         name: "{{name}}"
         namespace: rnacos-dev
       syncPolicy:
-        automated:
-          prune: false
-          selfHeal: false
         syncOptions:
+          - Prune=false
+          - Replace=false
           - ApplyOutOfSyncOnly=true
           - ServerSideApply=true
         retry:
