@@ -40,7 +40,7 @@ service:
   port: 10848
 
 ingress:
-  enabled: true
+  enabled: false
   className: "nginx"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod-issuer
